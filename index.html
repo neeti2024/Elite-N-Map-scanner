@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Elite Network Security Scanner</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+--primary-red: #dc2626;
+--dark-red: #991b1b;
+--light-red: #ef4444;
+--accent-red: #fecaca;
+--pure-white: #ffffff;
+--light-gray: #f8fafc;
+--border-gray: #e2e8f0;
+--text-dark: #1e293b;
+--text-light: #64748b;
+--shadow-light: rgba(220, 38, 38, 0.1);
+--shadow-medium: rgba(220, 38, 38, 0.2);
+--shadow-heavy: rgba(220, 38, 38, 0.3);
+}
+
+@keyframes slideInFromTop {
+0% {
+transform: translateY(-100px);
+opacity: 0;
+}
+100% {
+transform: translateY(0);
+opacity: 1;
+}
+}
+
+@keyframes slideInFromLeft {
+0% {
+transform: translateX(-100px);
+opacity: 0;
+}
+100% {
+transform: translateX(0);
+opacity: 1;
+}
+}
+
+@keyframes slideInFromRight {
+0% {
+transform: translateX(100px);
+opacity: 0;
+}
+100% {
+transform: translateX(0);
+opacity: 1;
+}
+}
+
+@keyframes fadeInUp {
+0% {
+transform: translateY(30px);
+opacity: 0;
+}
+100% {
+transform: translateY(0);
+opacity: 1;
+}
+}
+
+@keyframes pulse {
+0%, 100% {
+transform: scale(1);
+}
+50% {
+transform: scale(1.05);
+}
+}
+
+@keyframes scanningPulse {
+0% {
+background: linear-gradient(45deg, var(--primary-red), var(--dark-red));
+}
+50% {
+background: linear-gradient(45deg, var(--light-red), var(--primary-red));
+}
+100% {
+background: linear-gradient(45deg, var(--primary-red), var(--dark-red));
+}
+}
+
+@keyframes typewriter {
+0% {
+width: 0;
+}
+100% {
+width: 100%;
+}
+}
+
+@keyframes blink {
+50% {
+border-color: transparent;
+}
+}
+
+@keyframes float {
+0%, 100% {
+transform: translateY(0px);
+}
+50% {
+transform: translateY(-10px);
+}
+}
+
+@keyframes networkPulse {
+0% {
+box-shadow: 0 0 0 0 var(--shadow-medium);
+}
+70% {
+box-shadow: 0 0 0 20px rgba(220, 38, 38, 0);
+}
+100% {
+box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+}
+}
+
+body {
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+color: var(--text-dark);
+line-height: 1.6;
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 20px;
+}
+
+/* Header */
+header {
+background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+color: var(--pure-white);
+padding: 2rem 0;
+position: relative;
+overflow: hidden;
+animation: slideInFromTop 1s ease-out;
+}
+
+header::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+background-size: 50px 50px;
+animation: float 6s ease-in-out infinite;
+}
+
+.header-content {
+display: flex;
+align-items: center;
+justify-content: space-between;
+position: relative;
+z-index: 1;
+}
+
+.logo {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.logo-icon {
+width: 60px;
+height: 60px;
+background: var(--pure-white);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 24px;
+color: var(--primary-red);
+animation: networkPulse 2s infinite;
+}
+
+.logo h1 {
+font-size: 2.5rem;
+font-weight: 700;
+margin: 0;
+position: relative;
+overflow: hidden;
+white-space: nowrap;
+border-right: 3px solid var(--pure-white);
+animation: typewriter 3s steps(20) 1s forwards, blink 1s infinite;
+}
+
+.security-badge {
+background: rgba(255, 255, 255, 0.1);
+padding: 10px 20px;
+border-radius: 25px;
+font-size: 0.9rem;
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+animation: pulse 3s infinite;
+}
+
+/* Main Content */
+main {
+padding: 4rem 0;
+}
+
+.main-grid {
+display: grid;
+grid-template-columns: 1fr 350px;
+gap: 3rem;
+align-items: start;
+}
+
+/* Scanner Panel */
+.scanner-panel {
+background: var(--pure-white);
+border-radius: 20px;
+padding: 3rem;
+box-shadow: 0 20px 40px var(--shadow-light);
+border: 1px solid var(--border-gray);
+animation: slideInFromLeft 1s ease-out 0.3s both;
+position: relative;
+overflow: hidden;
+}
+
+.scanner-panel::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: linear-gradient(90deg, var(--primary-red), var(--light-red));
+}
+
+.panel-title {
+font-size: 1.8rem;
+font-weight: 600;
+margin-bottom: 2rem;
+color: var(--text-dark);
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.panel-title::before {
+content: '🔍';
+font-size: 1.5rem;
+}
+
+.form-group {
+margin-bottom: 2rem;
+animation: fadeInUp 0.6s ease-out forwards;
+opacity: 0;
+}
+
+.form-group:nth-child(2) { animation-delay: 0.1s; }
+.form-group:nth-child(3) { animation-delay: 0.2s; }
+.form-group:nth-child(4) { animation-delay: 0.3s; }
+
+label {
+display: block;
+margin-bottom: 8px;
+font-weight: 500;
+color: var(--text-dark);
+font-size: 0.95rem;
+}
+
+select, input[type="text"] {
+width: 100%;
+padding: 12px 16px;
+border: 2px solid var(--border-gray);
+border-radius: 12px;
+font-size: 1rem;
+font-family: 'Inter', sans-serif;
+transition: all 0.3s ease;
+background: var(--pure-white);
+}
+
+select:focus, input[type="text"]:focus {
+outline: none;
+border-color: var(--primary-red);
+box-shadow: 0 0 0 3px var(--shadow-light);
+transform: translateY(-2px);
+}
+
+.scan-button {
+width: 100%;
+padding: 16px;
+background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+color: var(--pure-white);
+border: none;
+border-radius: 12px;
+font-size: 1.1rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+position: relative;
+overflow: hidden;
+margin-top: 1rem;
+}
+
+.scan-button::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+transition: left 0.5s ease;
+}
+
+.scan-button:hover::before {
+left: 100%;
+}
+
+.scan-button:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 25px var(--shadow-medium);
+}
+
+.scan-button:active {
+transform: translateY(0);
+}
+
+.scan-button.scanning {
+animation: scanningPulse 2s infinite;
+}
+
+/* Output Terminal */
+.output-terminal {
+background: #1e293b;
+border-radius: 12px;
+padding: 1.5rem;
+margin-top: 2rem;
+font-family: 'JetBrains Mono', monospace;
+font-size: 0.9rem;
+color: #10b981;
+min-height: 300px;
+position: relative;
+overflow: hidden;
+border: 1px solid #334155;
+}
+
+.terminal-header {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 1rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid #334155;
+}
+
+.terminal-dot {
+width: 12px;
+height: 12px;
+border-radius: 50%;
+}
+
+.terminal-dot.red { background: #ef4444; }
+.terminal-dot.yellow { background: #f59e0b; }
+.terminal-dot.green { background: #10b981; }
+
+.terminal-content {
+white-space: pre-wrap;
+word-wrap: break-word;
+line-height: 1.6;
+}
+
+/* Sidebar */
+.sidebar {
+animation: slideInFromRight 1s ease-out 0.5s both;
+}
+
+.security-tips {
+background: var(--pure-white);
+border-radius: 20px;
+padding: 2rem;
+box-shadow: 0 20px 40px var(--shadow-light);
+border: 1px solid var(--border-gray);
+margin-bottom: 2rem;
+}
+
+.tips-title {
+font-size: 1.4rem;
+font-weight: 600;
+margin-bottom: 1.5rem;
+color: var(--text-dark);
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.tips-title::before {
+content: '🛡️';
+font-size: 1.3rem;
+}
+
+.tip-item {
+background: linear-gradient(135deg, var(--accent-red), rgba(254, 202, 202, 0.5));
+padding: 1rem;
+border-radius: 12px;
+margin-bottom: 1rem;
+border-left: 4px solid var(--primary-red);
+animation: fadeInUp 0.6s ease-out forwards;
+opacity: 0;
+transition: transform 0.3s ease;
+}
+
+.tip-item:nth-child(2) { animation-delay: 0.1s; }
+.tip-item:nth-child(3) { animation-delay: 0.2s; }
+.tip-item:nth-child(4) { animation-delay: 0.3s; }
+
+.tip-item:hover {
+transform: translateX(5px);
+}
+
+.tip-item h4 {
+font-size: 1rem;
+font-weight: 600;
+color: var(--primary-red);
+margin-bottom: 0.5rem;
+}
+
+.tip-item p {
+font-size: 0.9rem;
+color: var(--text-dark);
+margin: 0;
+}
+
+/* Scan Types */
+.scan-types {
+background: var(--pure-white);
+border-radius: 20px;
+padding: 2rem;
+box-shadow: 0 20px 40px var(--shadow-light);
+border: 1px solid var(--border-gray);
+}
+
+.scan-types h3 {
+font-size: 1.4rem;
+font-weight: 600;
+margin-bottom: 1.5rem;
+color: var(--text-dark);
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.scan-types h3::before {
+content: '⚡';
+font-size: 1.3rem;
+}
+
+.scan-type {
+padding: 1rem;
+border-radius: 12px;
+margin-bottom: 1rem;
+border: 2px solid var(--border-gray);
+transition: all 0.3s ease;
+cursor: pointer;
+animation: fadeInUp 0.6s ease-out forwards;
+opacity: 0;
+}
+
+.scan-type:nth-child(2) { animation-delay: 0.1s; }
+.scan-type:nth-child(3) { animation-delay: 0.2s; }
+.scan-type:nth-child(4) { animation-delay: 0.3s; }
+
+.scan-type:hover {
+border-color: var(--primary-red);
+transform: translateY(-2px);
+box-shadow: 0 5px 15px var(--shadow-light);
+}
+
+.scan-type h4 {
+font-size: 1rem;
+font-weight: 600;
+color: var(--primary-red);
+margin-bottom: 0.5rem;
+}
+
+.scan-type p {
+font-size: 0.9rem;
+color: var(--text-light);
+margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+.main-grid {
+grid-template-columns: 1fr;
+gap: 2rem;
+}
+
+.scanner-panel {
+padding: 2rem;
+}
+
+.logo h1 {
+font-size: 2rem;
+}
+
+.header-content {
+flex-direction: column;
+gap: 1rem;
+}
+}
+
+/* Loading Animation */
+.loading-dots {
+display: inline-block;
+position: relative;
+width: 80px;
+height: 80px;
+}
+
+.loading-dots div {
+position: absolute;
+top: 33px;
+width: 13px;
+height: 13px;
+border-radius: 50%;
+background: var(--primary-red);
+animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.loading-dots div:nth-child(1) {
+left: 8px;
+animation: loading1 0.6s infinite;
+}
+
+.loading-dots div:nth-child(2) {
+left: 8px;
+animation: loading2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(3) {
+left: 32px;
+animation: loading2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(4) {
+left: 56px;
+animation: loading3 0.6s infinite;
+}
+
+@keyframes loading1 {
+0% {
+transform: scale(0);
+}
+100% {
+transform: scale(1);
+}
+}
+
+@keyframes loading3 {
+0% {
+transform: scale(1);
+}
+100% {
+transform: scale(0);
+}
+}
+
+@keyframes loading2 {
+0% {
+transform: translate(0, 0);
+}
+100% {
+transform: translate(24px, 0);
+}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="container">
+<div class="header-content">
+<div class="logo">
+<div class="logo-icon">🔍</div>
+<h1>Elite Network Scanner</h1>
+</div>
+<div class="security-badge">
+🔒 Secure Network Analysis
+</div>
+</div>
+</div>
+</header>
+
+<main>
+<div class="container">
+<div class="main-grid">
+<div class="scanner-panel">
+<h2 class="panel-title">Network Security Scanner</h2>
+
+<form id="scanForm">
+<div class="form-group">
+<label for="scanOption">Select Scan Type:</label>
+<select id="scanOption" name="scanOption" required>
+<!-- Options will be populated dynamically -->
+</select>
+</div>
+
+<div id="inputsContainer">
+<div class="form-group" id="targetInput">
+<label for="target">Target (IP Address or Domain):</label>
+<input type="text" id="target" name="target" placeholder="e.g., 192.168.1.1 or example.com" required />
+</div>
+</div>
+
+<button type="submit" class="scan-button" id="scanButton">
+🚀 Initiate Security Scan
+</button>
+</form>
+
+<div class="output-terminal" id="outputTerminal">
+<div class="terminal-header">
+<div class="terminal-dot red"></div>
+<div class="terminal-dot yellow"></div>
+<div class="terminal-dot green"></div>
+<span style="margin-left: 10px; color: #64748b;">Security Scanner Terminal</span>
+</div>
+<div class="terminal-content" id="output">
+Welcome to Elite Network Scanner
+Ready to perform security analysis...
+
+📡 Select scan type and target to begin
+🔍 Results will appear here in real-time
+</div>
+</div>
+</div>
+
+<div class="sidebar">
+<div class="security-tips">
+<h3 class="tips-title">Security Best Practices</h3>
+
+<div class="tip-item">
+<h4>🔐 Always Get Permission</h4>
+<p>Only scan networks you own or have explicit permission to test. Unauthorized scanning is illegal.</p>
+</div>
+
+<div class="tip-item">
+<h4>🛡️ Start with Stealth</h4>
+<p>Use SYN scans for reconnaissance as they're less likely to be detected by security systems.</p>
+</div>
+
+<div class="tip-item">
+<h4>⚡ Limit Scan Speed</h4>
+<p>Aggressive scans can overwhelm targets and trigger security alerts. Use appropriate timing.</p>
+</div>
+
+<div class="tip-item">
+<h4>📊 Analyze Results</h4>
+<p>Document findings and prioritize vulnerabilities based on risk assessment and business impact.</p>
+</div>
+</div>
+
+<div class="scan-types">
+<h3>Common Scan Types</h3>
+
+<!-- Scan types will be populated dynamically -->
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<script>
+const scanOptions = JSON.parse('{{ options | tojson | safe }}');
+const scanOptionSelect = document.getElementById('scanOption');
+const inputsContainer = document.getElementById('inputsContainer');
+const outputElement = document.getElementById('output');
+const scanButton = document.getElementById('scanButton');
+const scanTypesContainer = document.querySelector('.scan-types');
+
+function clearAdditionalInputs() {
+const additionalInputs = document.querySelectorAll('.additional-input');
+additionalInputs.forEach(input => input.remove());
+}
+
+function createInput(id, label, placeholder = '', required = true) {
+const div = document.createElement('div');
+div.classList.add('form-group', 'additional-input');
+div.style.animationDelay = '0.4s';
+
+const labelEl = document.createElement('label');
+labelEl.setAttribute('for', id);
+labelEl.textContent = label;
+
+const inputEl = document.createElement('input');
+inputEl.type = 'text';
+inputEl.id = id;
+inputEl.name = id;
+inputEl.placeholder = placeholder;
+if (required) inputEl.required = true;
+
+div.appendChild(labelEl);
+div.appendChild(inputEl);
+inputsContainer.appendChild(div);
+}
+
+function updateInputs() {
+clearAdditionalInputs();
+const selected = scanOptionSelect.value;
+const inputs = scanOptions[selected].inputs;
+
+// Always show target input if required
+if (!inputs.includes('target')) {
+document.getElementById('targetInput').style.display = 'none';
+} else {
+document.getElementById('targetInput').style.display = 'block';
+}
+
+inputs.forEach(input => {
+if (input !== 'target') {
+let label = '';
+let placeholder = '';
+switch(input) {
+case 'decoy':
+label = 'Decoy IP Address (or RND:10)';
+placeholder = 'e.g., 192.168.1.1 or RND:10';
+break;
+case 'ports':
+label = 'Target Ports (e.g., 21,22,80)';
+placeholder = 'e.g., 21,22,80,443';
+break;
+case 'filename':
+label = 'Output Filename (no extension)';
+placeholder = 'e.g., security_scan_results';
+break;
+case 'mac':
+label = 'MAC Address Type (e.g., 0=random)';
+placeholder = 'e.g., 0=random';
+break;
+default:
+label = input.charAt(0).toUpperCase() + input.slice(1);
+}
+createInput(input, label, placeholder);
+}
+});
+}
+
+function typeWriter(text, element, speed = 30) {
+let i = 0;
+element.textContent = '';
+const timer = setInterval(() => {
+if (i < text.length) {
+element.textContent += text.charAt(i);
+i++;
+} else {
+clearInterval(timer);
+}
+}, speed);
+}
+
+function simulateScanProgress() {
+const progressMessages = [
+'🔍 Initializing network scanner...',
+'🌐 Resolving target hostname...',
+'📡 Performing host discovery...',
+'🔓 Scanning open ports...',
+'🛡️ Analyzing security posture...',
+'📊 Generating security report...'
+];
+
+let messageIndex = 0;
+const interval = setInterval(() => {
+if (messageIndex < progressMessages.length) {
+outputElement.textContent += '\n' + progressMessages[messageIndex];
+messageIndex++;
+} else {
+clearInterval(interval);
+// Add some fake results for demo
+outputElement.textContent += '\n\n✅ Scan completed successfully!';
+scanButton.textContent = '🚀 Initiate Security Scan';
+scanButton.classList.remove('scanning');
+}
+}, 1000);
+}
+
+function populateScanOptions() {
+// Populate select options
+for (const key in scanOptions) {
+const option = document.createElement('option');
+option.value = key;
+option.textContent = `${key}. ${scanOptions[key].name}`;
+scanOptionSelect.appendChild(option);
+}
+// Populate sidebar scan types (show first 4 as common)
+const commonKeys = Object.keys(scanOptions).slice(0, 4);
+commonKeys.forEach(key => {
+const scanType = document.createElement('div');
+scanType.classList.add('scan-type');
+scanType.style.animationDelay = `${(parseInt(key) - 1) * 0.1}s`;
+
+const h4 = document.createElement('h4');
+h4.textContent = scanOptions[key].name;
+
+const p = document.createElement('p');
+p.textContent = 'Description not available';
+
+scanType.appendChild(h4);
+scanType.appendChild(p);
+scanTypesContainer.appendChild(scanType);
+
+scanType.addEventListener('click', () => {
+scanOptionSelect.value = key;
+updateInputs();
+});
+});
+}
+
+scanOptionSelect.addEventListener('change', updateInputs);
+window.addEventListener('load', () => {
+populateScanOptions();
+updateInputs();
+});
+
+document.getElementById('scanForm').addEventListener('submit', async (e) => {
+e.preventDefault();
+
+scanButton.textContent = '🔄 Scanning...';
+scanButton.classList.add('scanning');
+
+outputElement.textContent = '🚀 Security scan initiated...\n';
+
+const formData = new FormData(e.target);
+const data = {};
+formData.forEach((value, key) => {
+data[key === 'scanOption' ? 'option' : key] = value.trim();
+});
+
+try {
+const response = await fetch('/scan', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(data)
+});
+
+const result = await response.json();
+
+if (response.ok) {
+outputElement.textContent = result.output;
+} else {
+outputElement.textContent = '❌ Error: ' + (result.error || 'Unknown error occurred');
+}
+} catch (err) {
+outputElement.textContent = '❌ Network Error: ' + err.message;
+} finally {
+scanButton.textContent = '🚀 Initiate Security Scan';
+scanButton.classList.remove('scanning');
+}
+
+// For demo purposes, simulate scan progress
+// Remove this in production
+simulateScanProgress();
+});
+</script>
+</body>
+</html>
